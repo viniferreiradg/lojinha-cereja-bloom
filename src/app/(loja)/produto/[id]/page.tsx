@@ -89,7 +89,7 @@ export default async function PaginaProduto({ params }: PageProps<"/produto/[id]
         dangerouslySetInnerHTML={{ __html: JSON.stringify(dadosEstruturados).replace(/</g, "\\u003c") }}
       />
       <Link href="/" className="mb-6 inline-block text-sm font-medium text-grafite hover:text-cereja">
-        ← Todas as camisetas
+        ← Todos os produtos
       </Link>
       <div className="grid gap-8 md:grid-cols-2 md:gap-12">
         <div className="overflow-hidden rounded-3xl border border-linha">

@@ -32,9 +32,25 @@ export default async function Vitrine() {
       <section className="mb-10 sm:mb-14">
         <p className="rotulo mb-3 text-cereja">Cereja Bloom</p>
         <h1 className="titulo text-5xl leading-none sm:text-7xl">lojinha</h1>
-        <p className="mt-4 max-w-xl text-lg text-grafite">
-          Escolha sua estampa, cor e tamanho. Você paga por PIX e manda o comprovante no nosso WhatsApp.
-        </p>
+        <div className="mt-4 max-w-xl space-y-3 text-lg text-grafite">
+          <p>
+            Escolha seus produtos e as opções (tamanho, cor), adicione ao carrinho, faça o Pix e mande o comprovante
+            pra gente.
+          </p>
+          <p>
+            Ficou com alguma dúvida?{" "}
+            <a
+              href="https://api.whatsapp.com/send/?phone=5548999450235"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-bold text-cereja underline underline-offset-2 hover:text-cereja-escura"
+            >
+              Chama no zap
+            </a>
+            .
+          </p>
+          <p>Fique à vontade!</p>
+        </div>
       </section>
 
       {config && !config.loja_aberta && (
