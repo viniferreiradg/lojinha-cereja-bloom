@@ -133,6 +133,11 @@ export async function excluirProduto(produtoId: string) {
   redirect("/admin/produtos");
 }
 
+function normalizarUrl(url: string) {
+  if (!url) return "";
+  return (/^https?:\/\//.test(url) ? url : `https://${url}`).replace(/\/+$/, "");
+}
+
 export async function salvarConfig(formData: FormData) {
   const supabase = await createClient();
   const texto = (campo: string) => String(formData.get(campo) ?? "").trim();
@@ -145,6 +150,16 @@ export async function salvarConfig(formData: FormData) {
       whatsapp_banda: texto("whatsapp_banda").replace(/\D/g, ""),
       preco_padrao: Number(texto("preco_padrao").replace(",", ".")) || 0,
       loja_aberta: formData.get("loja_aberta") === "on",
+      seo_titulo: texto("seo_titulo") || "Lojinha da Cereja Bloom",
+      seo_descricao: texto("seo_descricao"),
+      seo_palavras_chave: texto("seo_palavras_chave"),
+      seo_imagem_url: texto("seo_imagem_url") || null,
+      seo_url_site: normalizarUrl(texto("seo_url_site")),
+      seo_indexar: formData.get("seo_indexar") === "on",
+      // Aceita o código puro ou a tag <meta name="google-site-verification" content="..."> inteira
+      seo_google_verificacao: texto("seo_google_verificacao").match(/content=["']([^"']+)["']/)?.[1] ?? texto("seo_google_verificacao"),
+      seo_google_analytics: texto("seo_google_analytics").toUpperCase(),
+      seo_instagram: texto("seo_instagram").replace(/^@/, "").replace(/^https?:\/\/(www\.)?instagram\.com\//, "").replace(/\/+$/, ""),
     })
     .eq("id", 1);
   if (error) redirect(`/admin/config?erro=${encodeURIComponent(error.message)}`);

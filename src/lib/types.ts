@@ -34,6 +34,15 @@ export type Configuracoes = {
   whatsapp_banda: string;
   preco_padrao: number;
   loja_aberta: boolean;
+  seo_titulo: string;
+  seo_descricao: string;
+  seo_palavras_chave: string;
+  seo_imagem_url: string | null;
+  seo_url_site: string;
+  seo_indexar: boolean;
+  seo_google_verificacao: string;
+  seo_google_analytics: string;
+  seo_instagram: string;
 };
 
 export type StatusPedido = "pendente" | "pago" | "cancelado";

@@ -1,10 +1,12 @@
 import { carregarConfig } from "@/lib/supabase/server";
+import { carregarSeo } from "@/lib/seo";
 import { salvarConfig } from "../../actions";
+import { SecaoSeo } from "./secao-seo";
 
 export const dynamic = "force-dynamic";
 
 export default async function Config({ searchParams }: PageProps<"/admin/config">) {
-  const [config, params] = await Promise.all([carregarConfig(), searchParams]);
+  const [config, params, seo] = await Promise.all([carregarConfig(), searchParams, carregarSeo()]);
   if (!config) return <p>Não foi possível carregar as configurações.</p>;
 
   return (
@@ -50,6 +52,8 @@ export default async function Config({ searchParams }: PageProps<"/admin/config"
           <span className="font-medium">Lojinha aberta (desmarque para fechar)</span>
         </label>
       </div>
+
+      <SecaoSeo config={config} urlPadrao={seo.urlSite} />
 
       <button className="btn btn-primario">Salvar</button>
     </form>

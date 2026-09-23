@@ -18,7 +18,16 @@ create table if not exists configuracoes (
   cidade text not null default 'LAGUNA',
   whatsapp_banda text not null default '',
   preco_padrao numeric(10,2) not null default 80,
-  loja_aberta boolean not null default true
+  loja_aberta boolean not null default true,
+  seo_titulo text not null default 'Lojinha da Cereja Bloom',
+  seo_descricao text not null default 'Camisetas oficiais da Cereja Bloom, banda de indie rock de Laguna (SC). Compre ou garanta a sua na pré-venda.',
+  seo_palavras_chave text not null default 'cereja bloom, camiseta, merch, banda, indie rock, laguna',
+  seo_imagem_url text,
+  seo_url_site text not null default '',
+  seo_indexar boolean not null default true,
+  seo_google_verificacao text not null default '',
+  seo_google_analytics text not null default '',
+  seo_instagram text not null default 'cerejabloom'
 );
 insert into configuracoes (id) values (1) on conflict do nothing;
 

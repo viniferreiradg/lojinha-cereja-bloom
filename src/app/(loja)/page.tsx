@@ -2,16 +2,33 @@ import Link from "next/link";
 import { FotoProduto } from "@/components/foto-produto";
 import { formatarPreco } from "@/lib/format";
 import { carregarProdutosLoja } from "@/lib/loja";
+import { carregarSeo } from "@/lib/seo";
 import { carregarConfig } from "@/lib/supabase/server";
 import { MODOS_VENDA } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
+export const metadata = { alternates: { canonical: "/" } };
+
 export default async function Vitrine() {
-  const [produtos, config] = await Promise.all([carregarProdutosLoja(), carregarConfig()]);
+  const [produtos, config, seo] = await Promise.all([carregarProdutosLoja(), carregarConfig(), carregarSeo()]);
+  // Liga a Lojinha ao site e ao Instagram da banda no Google
+  const dadosEstruturados = {
+    "@context": "https://schema.org",
+    "@type": "OnlineStore",
+    name: seo.titulo,
+    description: seo.descricao,
+    url: seo.urlSite,
+    logo: `${seo.urlSite}/web-app-manifest-512x512.png`,
+    sameAs: ["https://www.cerejabloom.com.br", ...(seo.instagram ? [`https://www.instagram.com/${seo.instagram}`] : [])],
+  };
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(dadosEstruturados).replace(/</g, "\\u003c") }}
+      />
       <section className="mb-10 sm:mb-14">
         <p className="rotulo mb-3 text-cereja">Cereja Bloom</p>
         <h1 className="titulo text-5xl leading-none sm:text-7xl">lojinha</h1>

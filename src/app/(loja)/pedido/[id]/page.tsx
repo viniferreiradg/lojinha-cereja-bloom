@@ -9,6 +9,9 @@ import { CopiarPix } from "./copiar-pix";
 
 export const dynamic = "force-dynamic";
 
+// Página pessoal do cliente: fora dos buscadores
+export const metadata = { title: "Seu pedido", robots: { index: false, follow: false } };
+
 type PedidoCliente = {
   id: string;
   codigo: string;
