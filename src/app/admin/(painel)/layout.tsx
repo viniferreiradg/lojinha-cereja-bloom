@@ -35,7 +35,7 @@ export default async function PainelLayout({ children }: LayoutProps<"/admin">) 
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
           <div className="flex items-center gap-3">
             <Link href="/admin">
-              <Logo className="h-6" />
+              <Logo className="h-9" />
             </Link>
             <span className="rotulo rounded-full bg-tinta px-2 py-0.5 text-[0.65rem] text-creme">admin</span>
           </div>

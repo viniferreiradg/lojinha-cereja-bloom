@@ -9,7 +9,7 @@ export function CabecalhoLoja() {
 
   return (
     <header className="sticky top-0 z-20 border-b border-linha bg-creme/90 backdrop-blur">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
+      <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
         <Link href="/" aria-label="Início">
           <Logo />
         </Link>

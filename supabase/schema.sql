@@ -43,6 +43,9 @@ create table if not exists variacoes (
   tamanho text not null,
   ordem int not null default 0,
   estoque int not null default 0,
+  -- só o admin vê: não entram no disponível da loja
+  venda_fisica int not null default 0 check (venda_fisica >= 0),
+  integrantes int not null default 0 check (integrantes >= 0),
   unique (produto_id, tamanho)
 );
 
@@ -123,8 +126,9 @@ create policy "produtos: loja lê ativos" on produtos for select using (ativo or
 drop policy if exists "produtos: admin gerencia" on produtos;
 create policy "produtos: admin gerencia" on produtos for all using (is_admin()) with check (is_admin());
 
+-- a loja lê os tamanhos pela view loja_variacoes; a tabela em si fica só para o admin
 drop policy if exists "variacoes: todos leem" on variacoes;
-create policy "variacoes: todos leem" on variacoes for select using (true);
+revoke select on variacoes from anon;
 drop policy if exists "variacoes: admin gerencia" on variacoes;
 create policy "variacoes: admin gerencia" on variacoes for all using (is_admin()) with check (is_admin());
 

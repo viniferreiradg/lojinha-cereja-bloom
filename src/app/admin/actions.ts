@@ -19,7 +19,7 @@ export async function definirStatus(pedidoId: string, status: StatusPedido) {
   return { ok: true };
 }
 
-export type VariacaoForm = { id?: string; tamanho: string; estoque: number };
+export type VariacaoForm = { id?: string; tamanho: string; estoque: number; venda_fisica: number; integrantes: number };
 export type ProdutoForm = {
   id?: string;
   nome: string;
@@ -92,6 +92,8 @@ export async function salvarProduto(form: ProdutoForm): Promise<{ erro: string }
       produto_id: produtoId,
       tamanho: v.tamanho.trim().toUpperCase(),
       estoque: Math.trunc(v.estoque) || 0,
+      venda_fisica: Math.max(Math.trunc(v.venda_fisica) || 0, 0),
+      integrantes: Math.max(Math.trunc(v.integrantes) || 0, 0),
       ordem,
     };
     const { error } = v.id

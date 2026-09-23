@@ -18,7 +18,7 @@ export default async function NovoProduto() {
           modo: "pre_venda",
           ativo: true,
           ordem: 0,
-          variacoes: TAMANHOS_PADRAO.map((tamanho) => ({ tamanho, estoque: 0 })),
+          variacoes: TAMANHOS_PADRAO.map((tamanho) => ({ tamanho, estoque: 0, venda_fisica: 0, integrantes: 0 })),
         }}
       />
     </>

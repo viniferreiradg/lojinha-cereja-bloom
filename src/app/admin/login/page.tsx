@@ -29,7 +29,7 @@ export default function Login() {
   return (
     <main className="grid flex-1 place-items-center px-4 py-12">
       <form onSubmit={entrar} className="cartao w-full max-w-sm space-y-4 p-6">
-        <Logo className="h-8" />
+        <Logo className="h-14" />
         <h1 className="text-xl font-bold">Painel da Lojinha</h1>
         <label className="block">
           <span className="mb-1 block text-sm font-medium">E-mail</span>

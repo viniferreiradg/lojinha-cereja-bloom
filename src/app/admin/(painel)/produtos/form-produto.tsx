@@ -85,7 +85,8 @@ export function FormProduto({
     });
   }
 
-  const estoqueTotal = form.variacoes.reduce((s, v) => s + (Number(v.estoque) || 0), 0);
+  const soma = (campo: "estoque" | "venda_fisica" | "integrantes") =>
+    form.variacoes.reduce((s, v) => s + (Number(v[campo]) || 0), 0);
 
   return (
     <form onSubmit={salvar} className="grid gap-6 lg:grid-cols-[280px_1fr]">
@@ -178,40 +179,69 @@ export function FormProduto({
         </div>
 
         <div className="cartao p-5">
-          <div className="mb-3 flex items-baseline justify-between">
+          <div className="mb-1 flex flex-wrap items-baseline justify-between gap-x-3">
             <h2 className="font-bold">Tamanhos e estoque</h2>
-            <span className="text-sm text-grafite">{estoqueTotal} peças</span>
+            <span className="text-sm text-grafite">
+              {soma("estoque")} na loja · {soma("venda_fisica")} física · {soma("integrantes")} integrantes
+            </span>
           </div>
-          <div className="mb-2 grid grid-cols-[1fr_1fr_auto] gap-2 text-xs font-bold uppercase tracking-wider text-grafite">
-            <span>Tamanho</span>
-            <span>Estoque</span>
-            <span className="w-16" />
+          <p className="mb-4 text-xs text-grafite">
+            <strong>Venda física</strong> e <strong>integrantes</strong> não aparecem na loja: servem só para o Resumo.
+          </p>
+          <div className="mb-2 grid grid-cols-[3.5rem_1fr_1fr_1fr_2rem] gap-2 text-[0.65rem] font-bold uppercase leading-tight tracking-wider text-grafite sm:grid-cols-[5rem_1fr_1fr_1fr_2rem]">
+            <span>Tam.</span>
+            <span>Estoque loja</span>
+            <span>Venda física</span>
+            <span>Integrantes</span>
+            <span />
           </div>
           <ul className="space-y-2">
             {form.variacoes.map((v, i) => {
               const reservado = v.id ? reservados[v.id] ?? 0 : 0;
               return (
                 <li key={v.id ?? `nova-${i}`}>
-                  <div className="grid grid-cols-[1fr_1fr_auto] items-center gap-2">
+                  <div className="grid grid-cols-[3.5rem_1fr_1fr_1fr_2rem] items-center gap-2 sm:grid-cols-[5rem_1fr_1fr_1fr_2rem]">
                     <input
-                      className="campo py-2 uppercase"
+                      className="campo px-2 py-2 text-center uppercase"
                       required
+                      aria-label="Tamanho"
                       value={v.tamanho}
                       onChange={(e) => setVariacao(i, { tamanho: e.target.value })}
                     />
                     <input
-                      className="campo py-2"
+                      className="campo px-2 py-2"
                       type="number"
                       required
+                      aria-label={`Estoque da loja, tamanho ${v.tamanho}`}
                       value={v.estoque}
                       onChange={(e) => setVariacao(i, { estoque: Number(e.target.value) })}
                     />
+                    <input
+                      className="campo border-musgo/30 px-2 py-2"
+                      type="number"
+                      min={0}
+                      required
+                      aria-label={`Venda física, tamanho ${v.tamanho}`}
+                      value={v.venda_fisica}
+                      onChange={(e) => setVariacao(i, { venda_fisica: Number(e.target.value) })}
+                    />
+                    <input
+                      className="campo border-mostarda/40 px-2 py-2"
+                      type="number"
+                      min={0}
+                      required
+                      aria-label={`Camisetas dos integrantes, tamanho ${v.tamanho}`}
+                      value={v.integrantes}
+                      onChange={(e) => setVariacao(i, { integrantes: Number(e.target.value) })}
+                    />
                     <button
                       type="button"
-                      className="w-16 text-sm text-grafite underline hover:text-cereja"
+                      aria-label={`Remover tamanho ${v.tamanho}`}
+                      title="Remover tamanho"
+                      className="h-8 w-8 rounded-full text-lg text-grafite hover:bg-cereja-clara hover:text-cereja"
                       onClick={() => set("variacoes", form.variacoes.filter((_, j) => j !== i))}
                     >
-                      remover
+                      ×
                     </button>
                   </div>
                   {reservado > 0 && (
@@ -226,7 +256,7 @@ export function FormProduto({
           <button
             type="button"
             className="mt-3 text-sm font-bold text-cereja hover:underline"
-            onClick={() => set("variacoes", [...form.variacoes, { tamanho: "", estoque: 0 }])}
+            onClick={() => set("variacoes", [...form.variacoes, { tamanho: "", estoque: 0, venda_fisica: 0, integrantes: 0 }])}
           >
             + Adicionar tamanho
           </button>
