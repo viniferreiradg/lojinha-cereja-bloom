@@ -85,7 +85,25 @@ export default async function Vitrine() {
                   <div className="mt-3">
                     <h2 className="font-bold leading-tight group-hover:text-cereja sm:text-lg">{p.nome}</h2>
                     <p className="text-sm text-grafite">{[p.cor, p.estampa].filter(Boolean).join(" · ")}</p>
-                    <p className="mt-1 font-bold text-cereja">{formatarPreco(p.preco)}</p>
+                    {p.variacoes.length > 0 && (
+                      <ul className="mt-1.5 flex flex-wrap gap-1" aria-label="Tamanhos">
+                        {p.variacoes.map((v) => {
+                          const acabou = v.disponivel <= 0;
+                          return (
+                            <li
+                              key={v.id}
+                              title={acabou ? `${v.tamanho} esgotado` : `${v.tamanho} disponível`}
+                              className={`min-w-7 rounded-md px-1.5 py-0.5 text-center text-xs font-bold ring-1 ring-inset ${
+                                acabou ? "text-areia line-through ring-linha" : "bg-papel text-tinta ring-areia"
+                              }`}
+                            >
+                              {v.tamanho}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
+                    <p className="mt-1.5 font-bold text-cereja">{formatarPreco(p.preco)}</p>
                   </div>
                 </Link>
               </li>
