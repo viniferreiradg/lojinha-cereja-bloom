@@ -23,7 +23,7 @@ export default async function EditarProduto({ params }: PageProps<"/admin/produt
 
   return (
     <>
-      <h1 className="mb-6 text-2xl font-bold">Editar camiseta</h1>
+      <h1 className="mb-6 text-2xl font-bold">Editar produto</h1>
       <FormProduto
         inicial={{
           id: p.id,

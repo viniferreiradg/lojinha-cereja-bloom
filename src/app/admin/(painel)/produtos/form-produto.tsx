@@ -112,8 +112,8 @@ export function FormProduto({
       <div className="space-y-5">
         <div className="cartao grid gap-4 p-5 sm:grid-cols-2">
           <label className="block sm:col-span-2">
-            <span className="mb-1 block text-sm font-medium">Nome da camiseta</span>
-            <input className="campo" required value={form.nome} onChange={(e) => set("nome", e.target.value)} placeholder="Ex.: Camiseta Souvenir" />
+            <span className="mb-1 block text-sm font-medium">Nome do produto</span>
+            <input className="campo" required value={form.nome} onChange={(e) => set("nome", e.target.value)} placeholder="Ex.: Camiseta Souvenir, Ecobag Cereja" />
           </label>
           <label className="block">
             <span className="mb-1 block text-sm font-medium">Cor</span>
@@ -230,7 +230,7 @@ export function FormProduto({
                       type="number"
                       min={0}
                       required
-                      aria-label={`Camisetas dos integrantes, tamanho ${v.tamanho}`}
+                      aria-label={`Peças dos integrantes, tamanho ${v.tamanho}`}
                       value={v.integrantes}
                       onChange={(e) => setVariacao(i, { integrantes: Number(e.target.value) })}
                     />
@@ -273,7 +273,7 @@ export function FormProduto({
           </Link>
           {form.id && (
             <button type="button" onClick={excluir} className="ml-auto text-sm text-grafite underline hover:text-cereja">
-              excluir camiseta
+              excluir produto
             </button>
           )}
         </div>

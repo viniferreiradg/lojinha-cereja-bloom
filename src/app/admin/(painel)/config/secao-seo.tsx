@@ -68,7 +68,7 @@ export function SecaoSeo({ config, urlPadrao }: Props) {
         </span>
         <input name="seo_titulo" className="campo" required value={titulo} onChange={(e) => setTitulo(e.target.value)} />
         <span className="mt-1 block text-xs text-grafite">
-          Aparece na aba do navegador e no Google. Nas páginas das camisetas vira “Nome da camiseta · {titulo || "título"}”.
+          Aparece na aba do navegador e no Google. Nas páginas dos produtos vira “Nome do produto · {titulo || "título"}”.
         </span>
       </label>
 
@@ -126,8 +126,8 @@ export function SecaoSeo({ config, urlPadrao }: Props) {
         {info && <p className="mt-1 text-xs text-musgo">✓ Imagem otimizada: {info}</p>}
         {erro && <p className="mt-1 text-xs font-medium text-cereja">{erro}</p>}
         <span className="mt-1 block text-xs text-grafite">
-          Recortada no centro para 1200×630, o formato do WhatsApp, Instagram e Facebook. Nas páginas das camisetas, vale a
-          foto da própria camiseta.
+          Recortada no centro para 1200×630, o formato do WhatsApp, Instagram e Facebook. Nas páginas dos produtos, vale a
+          foto do próprio produto.
         </span>
       </div>
 

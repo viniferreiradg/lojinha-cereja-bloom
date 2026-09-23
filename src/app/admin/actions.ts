@@ -36,11 +36,11 @@ export type ProdutoForm = {
 
 export async function salvarProduto(form: ProdutoForm): Promise<{ erro: string } | { id: string }> {
   const supabase = await createClient();
-  // A ordem só muda arrastando na lista de camisetas
+  // A ordem só muda arrastando na lista de produtos
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { variacoes, id, ordem: _ordem, ...dados } = form;
 
-  if (!dados.nome.trim()) return { erro: "Dê um nome para a camiseta." };
+  if (!dados.nome.trim()) return { erro: "Dê um nome para o produto." };
   const tamanhos = variacoes.map((v) => v.tamanho.trim().toUpperCase());
   if (tamanhos.some((t) => !t)) return { erro: "Preencha todos os tamanhos." };
   if (new Set(tamanhos).size !== tamanhos.length) return { erro: "Há tamanhos repetidos." };
@@ -50,7 +50,7 @@ export async function salvarProduto(form: ProdutoForm): Promise<{ erro: string }
     const { error } = await supabase.from("produtos").update(dados).eq("id", produtoId);
     if (error) return { erro: error.message };
   } else {
-    // Camiseta nova entra no fim da vitrine
+    // Produto novo entra no fim da vitrine
     const { data: ultima } = await supabase
       .from("produtos")
       .select("ordem")
@@ -125,7 +125,7 @@ export async function excluirProduto(produtoId: string) {
     return {
       erro:
         error.code === "23503"
-          ? "Essa camiseta já tem pedidos, então não pode ser excluída. Desative ela para sumir da loja."
+          ? "Esse produto já tem pedidos, então não pode ser excluído. Desmarque “Mostrar na loja” para ele sumir da vitrine."
           : error.message,
     };
   }

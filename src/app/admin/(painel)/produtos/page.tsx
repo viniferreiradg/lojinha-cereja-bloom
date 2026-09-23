@@ -20,14 +20,14 @@ export default async function Produtos() {
   return (
     <>
       <div className="mb-4 flex items-center justify-between gap-3">
-        <h1 className="text-2xl font-bold">Camisetas</h1>
+        <h1 className="text-2xl font-bold">Produtos</h1>
         <Link href="/admin/produtos/novo" className="btn btn-primario btn-pequeno">
-          + Nova camiseta
+          + Novo produto
         </Link>
       </div>
 
       {lista.length === 0 ? (
-        <p className="cartao p-8 text-center text-grafite">Nenhuma camiseta cadastrada ainda.</p>
+        <p className="cartao p-8 text-center text-grafite">Nenhum produto cadastrado ainda.</p>
       ) : (
         <ListaProdutos produtos={lista} />
       )}

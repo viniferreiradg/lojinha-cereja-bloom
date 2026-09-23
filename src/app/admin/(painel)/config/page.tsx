@@ -44,7 +44,7 @@ export default async function Config({ searchParams }: PageProps<"/admin/config"
           <input name="whatsapp_banda" className="campo" inputMode="tel" defaultValue={config.whatsapp_banda} placeholder="48999999999" />
         </label>
         <label className="block">
-          <span className="mb-1 block text-sm font-medium">Preço padrão das camisetas novas (R$)</span>
+          <span className="mb-1 block text-sm font-medium">Preço padrão dos produtos novos (R$)</span>
           <input name="preco_padrao" className="campo" inputMode="decimal" defaultValue={Number(config.preco_padrao).toFixed(2)} />
         </label>
         <label className="flex items-center gap-2">

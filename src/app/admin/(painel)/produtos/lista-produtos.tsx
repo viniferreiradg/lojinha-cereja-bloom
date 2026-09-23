@@ -60,7 +60,7 @@ export function ListaProdutos({ produtos: inicial }: { produtos: ProdutoAdmin[] 
   return (
     <>
       <p className="mb-3 flex min-h-5 items-center justify-between gap-3 text-sm text-grafite">
-        <span>Arraste pelo ⠿ para mudar a ordem em que as camisetas aparecem na loja.</span>
+        <span>Arraste pelo ⠿ para mudar a ordem em que os produtos aparecem na loja.</span>
         {salvando ? (
           <span className="shrink-0">Salvando…</span>
         ) : (
@@ -111,7 +111,7 @@ function ItemProduto({ produto: p, posicao }: { produto: ProdutoAdmin; posicao: 
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <p className="font-bold leading-tight">{p.nome}</p>
-            {!p.ativo && <span className="rotulo shrink-0 rounded-full bg-linha px-2 py-0.5 text-[0.6rem]">oculta</span>}
+            {!p.ativo && <span className="rotulo shrink-0 rounded-full bg-linha px-2 py-0.5 text-[0.6rem]">oculto</span>}
           </div>
           <p className="text-sm text-grafite">{[p.cor, p.estampa].filter(Boolean).join(" · ")}</p>
           <p className="text-sm">

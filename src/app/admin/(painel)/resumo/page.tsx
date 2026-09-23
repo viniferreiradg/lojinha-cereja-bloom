@@ -58,7 +58,7 @@ export default async function Resumo() {
   return (
     <>
       <h1 className="text-2xl font-bold">Resumo</h1>
-      <p className="mt-1 text-sm text-grafite">Cada quadradinho é uma camiseta.</p>
+      <p className="mt-1 text-sm text-grafite">Cada quadradinho é uma peça.</p>
 
       <div className="cartao mt-5 p-5">
         <div className="flex flex-wrap items-end justify-between gap-4">
@@ -79,7 +79,7 @@ export default async function Resumo() {
       </div>
 
       {lista.length === 0 ? (
-        <p className="cartao mt-4 p-8 text-center text-grafite">Nenhuma camiseta cadastrada ainda.</p>
+        <p className="cartao mt-4 p-8 text-center text-grafite">Nenhum produto cadastrado ainda.</p>
       ) : (
         <ul className="mt-4 grid gap-4 lg:grid-cols-2">
           {lista.map((p) => (
@@ -90,7 +90,7 @@ export default async function Resumo() {
                   <p className="font-bold leading-tight">
                     {p.nome}
                     {!p.ativo && (
-                      <span className="rotulo ml-2 rounded-full bg-linha px-2 py-0.5 align-middle text-[0.6rem]">oculta</span>
+                      <span className="rotulo ml-2 rounded-full bg-linha px-2 py-0.5 align-middle text-[0.6rem]">oculto</span>
                     )}
                   </p>
                   <p className="text-sm text-grafite">

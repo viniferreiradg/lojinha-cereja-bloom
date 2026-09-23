@@ -6,7 +6,7 @@ export default async function NovoProduto() {
   const config = await carregarConfig();
   return (
     <>
-      <h1 className="mb-6 text-2xl font-bold">Nova camiseta</h1>
+      <h1 className="mb-6 text-2xl font-bold">Novo produto</h1>
       <FormProduto
         inicial={{
           nome: "",
