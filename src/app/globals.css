@@ -1,26 +1,102 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Fonte dos títulos, a mesma do site da banda (arquivo em public/fonts) */
+@font-face {
+  font-family: "Astheric";
+  src: url("/fonts/astheric-bold-webfont.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
 }
 
+/* Identidade da Cereja Bloom em versão clara */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-creme: #f9f8ed;
+  --color-papel: #fffef7;
+  --color-tinta: #1c1b1a;
+  --color-grafite: #4a4843;
+  --color-areia: #b9b7ab;
+  --color-linha: #e4e2d4;
+  --color-cereja: #e8112f;
+  --color-cereja-escura: #c20d27;
+  --color-cereja-clara: #fde7ea;
+  --color-musgo: #2f7a4b;
+  --color-musgo-claro: #e3f1e7;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-space-grotesk), system-ui, sans-serif;
+  --font-display: "Astheric", var(--font-space-grotesk), system-ui, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-creme);
+  color: var(--color-tinta);
+}
+
+.titulo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.rotulo {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s, opacity 0.15s;
+  cursor: pointer;
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn-primario {
+  background: var(--color-cereja);
+  color: #fff;
+}
+.btn-primario:not(:disabled):hover {
+  background: var(--color-cereja-escura);
+}
+.btn-contorno {
+  border: 1.5px solid var(--color-tinta);
+  color: var(--color-tinta);
+}
+.btn-contorno:not(:disabled):hover {
+  background: var(--color-tinta);
+  color: var(--color-creme);
+}
+.btn-pequeno {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+}
+
+.campo {
+  width: 100%;
+  border: 1.5px solid var(--color-linha);
+  background: var(--color-papel);
+  border-radius: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.campo:focus {
+  border-color: var(--color-tinta);
+}
+
+.cartao {
+  background: var(--color-papel);
+  border: 1px solid var(--color-linha);
+  border-radius: 1.25rem;
 }

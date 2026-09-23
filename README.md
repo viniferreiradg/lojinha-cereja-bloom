@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Lojinha · Cereja Bloom
 
-## Getting Started
+Loja de camisetas da banda com carrinho, pagamento por PIX (copia e cola + QR Code) e painel admin
+para cadastrar camisetas e marcar pedidos como pagos.
 
-First, run the development server:
+**Stack:** Next.js 16 · Tailwind 4 · Supabase (banco, login e fotos) · Vercel
 
+## Tipo de venda
+
+Cada camiseta tem um tipo, escolhido no cadastro do admin:
+- **Comprar**: peça pronta para entrega. Selo "Pronta entrega" na vitrine.
+- **Fazer pré-venda**: produção depois da venda. Selo "Pré-venda" na vitrine.
+
+O tipo aparece no botão da loja, no carrinho, na confirmação e nos pedidos do admin.
+
+## Como o estoque funciona
+
+- **Estoque** é a quantidade real de peças de cada tamanho. Só baixa quando o admin marca o pedido como **pago**.
+- **Disponível na loja** = estoque − peças em pedidos aguardando pagamento. Assim ninguém compra uma peça já reservada.
+- **Cancelar** um pedido libera as peças (e devolve ao estoque se ele estava pago).
+
+## Configuração (uma vez só)
+
+### 1. Supabase
+1. Crie uma conta em [supabase.com](https://supabase.com) e um projeto novo (região São Paulo).
+2. Em **SQL Editor → New query**, cole todo o conteúdo de [`supabase/schema.sql`](supabase/schema.sql) e clique em **Run**.
+   - Se você já tinha rodado o `schema.sql` antes, rode também os arquivos de [`supabase/atualizacoes/`](supabase/atualizacoes) em ordem.
+   - No final do arquivo fica o e-mail de quem pode entrar no admin. Troque/adicione antes de rodar se precisar.
+3. Em **Authentication → Users → Add user → Create new user**, crie o usuário admin com o mesmo e-mail e uma senha
+   (marque *Auto Confirm User*).
+4. Em **Authentication → Sign In / Providers**, desligue **Allow new users to sign up**.
+5. Em **Project Settings → API Keys**, copie a *Publishable key*; em **Data API**, copie a *Project URL*.
+
+### 2. Rodar no computador
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local   # e cole a URL e a chave do Supabase
+npm install
+npm run dev                  # abre em http://localhost:3000
 ```
+Entre em `/admin`, vá em **Configurações** e preencha a chave PIX e o WhatsApp da banda.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Publicar na Vercel
+1. Suba este projeto para um repositório no GitHub.
+2. Em [vercel.com](https://vercel.com), **Add New → Project**, importe o repositório.
+3. Em **Environment Variables**, adicione `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
+4. **Deploy**. A cada `git push` o site atualiza sozinho.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Páginas
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Rota | O que é |
+|---|---|
+| `/` | Vitrine |
+| `/produto/[id]` | Escolha de tamanho e quantidade |
+| `/carrinho` | Carrinho + nome e WhatsApp |
+| `/pedido/[id]` | Código do pedido, PIX e botão de enviar comprovante |
+| `/admin` | Pedidos (marcar pago / cancelar) |
+| `/admin/produtos` | Cadastro de camisetas, fotos, preço e estoque por tamanho |
+| `/admin/resumo` | Quantidades por modelo e tamanho, para mandar pra estamparia |
+| `/admin/config` | Chave PIX, WhatsApp, preço padrão, abrir/fechar a Lojinha |
