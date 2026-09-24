@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import type { ModoVenda, StatusPedido } from "@/lib/types";
+import type { Categoria, ModoVenda, StatusPedido } from "@/lib/types";
 
 export async function sair() {
   const supabase = await createClient();
@@ -29,6 +29,7 @@ export type ProdutoForm = {
   foto_url: string | null;
   preco: number;
   modo: ModoVenda;
+  categoria_id: string | null;
   ativo: boolean;
   ordem: number;
   variacoes: VariacaoForm[];
@@ -104,6 +105,21 @@ export async function salvarProduto(form: ProdutoForm): Promise<{ erro: string }
 
   revalidatePath("/", "layout");
   return { id: produtoId };
+}
+
+// Cria a categoria na hora, pelo campo do produto; se já existir (mesmo nome), devolve a existente
+export async function criarCategoria(nome: string): Promise<Categoria | { erro: string }> {
+  const limpo = nome.trim().replace(/\s+/g, " ");
+  if (!limpo) return { erro: "Digite um nome para a categoria." };
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("categorias").insert({ nome: limpo }).select("id, nome").single();
+  if (!error) return data as Categoria;
+  if (error.code === "23505") {
+    const { data: existentes } = await supabase.from("categorias").select("id, nome");
+    const igual = (existentes ?? []).find((c) => c.nome.trim().toLowerCase() === limpo.toLowerCase());
+    if (igual) return igual as Categoria;
+  }
+  return { erro: error.message };
 }
 
 // Grava a ordem da vitrine a partir da lista arrastada no admin

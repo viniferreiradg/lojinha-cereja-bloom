@@ -31,6 +31,13 @@ create table if not exists configuracoes (
 );
 insert into configuracoes (id) values (1) on conflict do nothing;
 
+create table if not exists categorias (
+  id uuid primary key default gen_random_uuid(),
+  nome text not null check (length(trim(nome)) > 0),
+  criado_em timestamptz not null default now()
+);
+create unique index if not exists categorias_nome_unico on categorias (lower(trim(nome)));
+
 create table if not exists produtos (
   id uuid primary key default gen_random_uuid(),
   nome text not null,
@@ -42,6 +49,8 @@ create table if not exists produtos (
   -- 'compra' = pronta entrega (botão "Comprar"); 'pre_venda' = botão "Fazer pré-venda"
   modo text not null default 'pre_venda' check (modo in ('compra', 'pre_venda')),
   ativo boolean not null default true,
+  -- só para o admin organizar; a loja não usa
+  categoria_id uuid references categorias(id) on delete set null,
   ordem int not null default 0,
   criado_em timestamptz not null default now()
 );
@@ -117,6 +126,7 @@ $$;
 
 alter table admins enable row level security;
 alter table configuracoes enable row level security;
+alter table categorias enable row level security;
 alter table produtos enable row level security;
 alter table variacoes enable row level security;
 alter table pedidos enable row level security;
@@ -136,6 +146,9 @@ drop policy if exists "produtos: admin gerencia" on produtos;
 create policy "produtos: admin gerencia" on produtos for all using (is_admin()) with check (is_admin());
 
 -- a loja lê os tamanhos pela view loja_variacoes; a tabela em si fica só para o admin
+drop policy if exists "categorias: admin gerencia" on categorias;
+create policy "categorias: admin gerencia" on categorias for all using (is_admin()) with check (is_admin());
+
 drop policy if exists "variacoes: todos leem" on variacoes;
 revoke select on variacoes from anon;
 drop policy if exists "variacoes: admin gerencia" on variacoes;

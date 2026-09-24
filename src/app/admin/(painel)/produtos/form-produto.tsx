@@ -6,14 +6,17 @@ import { useState, useTransition } from "react";
 import { FotoProduto } from "@/components/foto-produto";
 import { formatarBytes, otimizarImagem } from "@/lib/otimizar-imagem";
 import { createClient } from "@/lib/supabase/client";
-import { MODOS_VENDA, type ModoVenda } from "@/lib/types";
+import { MODOS_VENDA, type Categoria, type ModoVenda } from "@/lib/types";
 import { excluirProduto, salvarProduto, type ProdutoForm } from "../../actions";
+import { SeletorCategoria } from "./seletor-categoria";
 
 export function FormProduto({
   inicial,
+  categorias,
   reservados = {},
 }: {
   inicial: ProdutoForm;
+  categorias: Categoria[];
   reservados?: Record<string, number>;
 }) {
   const router = useRouter();
@@ -115,6 +118,16 @@ export function FormProduto({
             <span className="mb-1 block text-sm font-medium">Nome do produto</span>
             <input className="campo" required value={form.nome} onChange={(e) => set("nome", e.target.value)} placeholder="Ex.: Camiseta Souvenir, Ecobag Cereja" />
           </label>
+          <div className="sm:col-span-2">
+            <span className="mb-1 block text-sm font-medium">
+              Categoria <span className="font-normal text-grafite">(só aparece aqui no admin)</span>
+            </span>
+            <SeletorCategoria
+              categorias={categorias}
+              valor={form.categoria_id}
+              onChange={(id) => set("categoria_id", id)}
+            />
+          </div>
           <label className="block">
             <span className="mb-1 block text-sm font-medium">Cor</span>
             <input className="campo" value={form.cor} onChange={(e) => set("cor", e.target.value)} placeholder="Ex.: Preta" />

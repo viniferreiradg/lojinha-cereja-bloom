@@ -25,7 +25,7 @@ import { formatarPreco } from "@/lib/format";
 import { MODOS_VENDA, type Produto, type VariacaoLoja } from "@/lib/types";
 import { reordenarProdutos } from "../../actions";
 
-type ProdutoAdmin = Produto & { variacoes: VariacaoLoja[] };
+type ProdutoAdmin = Produto & { categoria: string | null; variacoes: VariacaoLoja[] };
 
 export function ListaProdutos({ produtos: inicial }: { produtos: ProdutoAdmin[] }) {
   const [produtos, setProdutos] = useState(inicial);
@@ -113,6 +113,7 @@ function ItemProduto({ produto: p, posicao }: { produto: ProdutoAdmin; posicao: 
             <p className="font-bold leading-tight">{p.nome}</p>
             {!p.ativo && <span className="rotulo shrink-0 rounded-full bg-linha px-2 py-0.5 text-[0.6rem]">oculto</span>}
           </div>
+          {p.categoria && <p className="rotulo mt-0.5 text-[0.6rem] text-cereja">{p.categoria}</p>}
           <p className="text-sm text-grafite">{[p.cor, p.estampa].filter(Boolean).join(" · ")}</p>
           <p className="text-sm">
             <strong className="text-cereja">{formatarPreco(Number(p.preco))}</strong>

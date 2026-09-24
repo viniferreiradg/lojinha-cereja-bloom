@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import type { Produto, VariacaoLoja } from "@/lib/types";
+import type { Categoria, Produto, VariacaoLoja } from "@/lib/types";
 import { FormProduto } from "../form-produto";
 
 export const dynamic = "force-dynamic";
@@ -10,10 +10,11 @@ export default async function EditarProduto({ params }: PageProps<"/admin/produt
   if (!/^[0-9a-f-]{36}$/i.test(id)) notFound();
 
   const supabase = await createClient();
-  const [{ data: produto }, { data: variacoes }, { data: extras }] = await Promise.all([
+  const [{ data: produto }, { data: variacoes }, { data: extras }, { data: categorias }] = await Promise.all([
     supabase.from("produtos").select("*").eq("id", id).single(),
     supabase.from("loja_variacoes").select("*").eq("produto_id", id).order("ordem"),
     supabase.from("variacoes").select("id, venda_fisica, integrantes").eq("produto_id", id),
+    supabase.from("categorias").select("id, nome").order("nome"),
   ]);
   if (!produto) notFound();
 
@@ -34,6 +35,7 @@ export default async function EditarProduto({ params }: PageProps<"/admin/produt
           foto_url: p.foto_url,
           preco: Number(p.preco),
           modo: p.modo,
+          categoria_id: p.categoria_id ?? null,
           ativo: p.ativo,
           ordem: p.ordem,
           variacoes: vs.map((v) => ({
@@ -44,6 +46,7 @@ export default async function EditarProduto({ params }: PageProps<"/admin/produt
             integrantes: extra.get(v.id)?.integrantes ?? 0,
           })),
         }}
+        categorias={(categorias ?? []) as Categoria[]}
         reservados={Object.fromEntries(vs.map((v) => [v.id, v.estoque - v.disponivel]))}
       />
     </>

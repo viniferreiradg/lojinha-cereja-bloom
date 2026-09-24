@@ -1,6 +1,6 @@
 import { FotoProduto } from "@/components/foto-produto";
 import { createClient } from "@/lib/supabase/server";
-import type { Produto, VariacaoLoja } from "@/lib/types";
+import type { Categoria, Produto, VariacaoLoja } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -18,11 +18,13 @@ const porcentagem = (c: Contagem) => (total(c) ? Math.round((vendidasTotal(c) / 
 
 export default async function Resumo() {
   const supabase = await createClient();
-  const [{ data: produtos }, { data: variacoes }, { data: pagos }, { data: extras }] = await Promise.all([
+  const [{ data: produtos }, { data: variacoes }, { data: pagos }, { data: extras }, { data: categorias }] =
+    await Promise.all([
     supabase.from("produtos").select("*").order("ordem").order("criado_em"),
     supabase.from("loja_variacoes").select("*").order("ordem"),
     supabase.from("itens_pedido").select("variacao_id, quantidade, pedidos!inner(status)").eq("pedidos.status", "pago"),
     supabase.from("variacoes").select("id, venda_fisica, integrantes"),
+    supabase.from("categorias").select("id, nome").order("nome"),
   ]);
   const extra = new Map(
     ((extras ?? []) as { id: string; venda_fisica: number; integrantes: number }[]).map((e) => [e.id, e]),
@@ -55,6 +57,18 @@ export default async function Resumo() {
   });
   const geral = lista.reduce((s, p) => somar(s, p.contagem), vazio());
 
+  // Um card por categoria (em ordem alfabética); produtos sem categoria vão para o último card
+  const porCategoria = [
+    ...((categorias ?? []) as Categoria[]).map((c) => ({
+      id: c.id,
+      nome: c.nome,
+      produtos: lista.filter((p) => p.categoria_id === c.id),
+    })),
+    { id: "sem-categoria", nome: "Sem categoria", produtos: lista.filter((p) => !p.categoria_id) },
+  ]
+    .filter((c) => c.produtos.length > 0)
+    .map((c) => ({ ...c, contagem: c.produtos.reduce((s, p) => somar(s, p.contagem), vazio()) }));
+
   return (
     <>
       <h1 className="text-2xl font-bold">Resumo</h1>
@@ -71,12 +85,30 @@ export default async function Resumo() {
           <Legenda />
         </div>
         <BarraProgresso contagem={geral} />
-        <p className="mt-2 text-sm text-grafite">
-          <strong className="text-tinta">{porcentagem(geral)}% vendido</strong> · {geral.vendidas} pela loja ·{" "}
-          {geral.fisicas} venda física · {geral.integrantes} integrantes · {geral.reservadas} aguardando pagamento ·{" "}
-          {geral.disponiveis} disponíveis
-        </p>
+        <Detalhes contagem={geral} />
       </div>
+
+      {/* Aparece assim que existe ao menos uma categoria usada */}
+      {porCategoria.some((c) => c.id !== "sem-categoria") && (
+        <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {porCategoria.map((c) => (
+            <li key={c.id} className="cartao p-5">
+              <p className="rotulo text-grafite">
+                Total {c.nome}
+                <span className="ml-1.5 font-medium normal-case tracking-normal">
+                  · {c.produtos.length} {c.produtos.length === 1 ? "produto" : "produtos"}
+                </span>
+              </p>
+              <p className="mt-1 text-2xl font-bold">
+                {vendidasTotal(c.contagem)}{" "}
+                <span className="text-base font-medium text-grafite">de {total(c.contagem)}</span>
+              </p>
+              <BarraProgresso contagem={c.contagem} />
+              <Detalhes contagem={c.contagem} />
+            </li>
+          ))}
+        </ul>
+      )}
 
       {lista.length === 0 ? (
         <p className="cartao mt-4 p-8 text-center text-grafite">Nenhum produto cadastrado ainda.</p>
@@ -139,6 +171,15 @@ function Quadradinhos({ contagem }: { contagem: Contagem }) {
         <span key={i} className={`h-4 w-4 rounded-[4px] ${ESTILO[tipo]}`} />
       ))}
     </div>
+  );
+}
+
+function Detalhes({ contagem: c }: { contagem: Contagem }) {
+  return (
+    <p className="mt-2 text-sm text-grafite">
+      <strong className="text-tinta">{porcentagem(c)}% vendido</strong> · {c.vendidas} pela loja · {c.fisicas} venda
+      física · {c.integrantes} integrantes · {c.reservadas} aguardando pagamento · {c.disponiveis} disponíveis
+    </p>
   );
 }
 

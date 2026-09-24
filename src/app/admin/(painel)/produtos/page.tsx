@@ -1,19 +1,22 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import type { Produto, VariacaoLoja } from "@/lib/types";
+import type { Categoria, Produto, VariacaoLoja } from "@/lib/types";
 import { ListaProdutos } from "./lista-produtos";
 
 export const dynamic = "force-dynamic";
 
 export default async function Produtos() {
   const supabase = await createClient();
-  const [{ data: produtos }, { data: variacoes }] = await Promise.all([
+  const [{ data: produtos }, { data: variacoes }, { data: categorias }] = await Promise.all([
     supabase.from("produtos").select("*").order("ordem").order("criado_em"),
     supabase.from("loja_variacoes").select("*").order("ordem"),
+    supabase.from("categorias").select("id, nome"),
   ]);
+  const nomeCategoria = new Map(((categorias ?? []) as Categoria[]).map((c) => [c.id, c.nome]));
 
   const lista = ((produtos ?? []) as Produto[]).map((p) => ({
     ...p,
+    categoria: p.categoria_id ? (nomeCategoria.get(p.categoria_id) ?? null) : null,
     variacoes: ((variacoes ?? []) as VariacaoLoja[]).filter((v) => v.produto_id === p.id),
   }));
 

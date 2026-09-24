@@ -5,6 +5,8 @@ export const MODOS_VENDA: Record<ModoVenda, { botao: string; selo: string }> = {
   pre_venda: { botao: "Fazer pré-venda", selo: "Pré-venda" },
 };
 
+export type Categoria = { id: string; nome: string };
+
 export type Produto = {
   id: string;
   nome: string;
@@ -14,6 +16,7 @@ export type Produto = {
   foto_url: string | null;
   preco: number;
   modo: ModoVenda;
+  categoria_id: string | null;
   ativo: boolean;
   ordem: number;
 };
